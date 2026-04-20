@@ -17,5 +17,13 @@ class TestBowlingGame(unittest.TestCase):
         self.roll_many(20, 1)
         self.assertEqual(self.g.score(), 20)
 
+    def test_one_spare(self):
+        """Тест: один Spare (5 + 5), а затем бросок на 3 очка. Итого: 10 + 3 (бонус) + 3 = 16"""
+        self.g.roll(5)
+        self.g.roll(5) # Spare!
+        self.g.roll(3)
+        self.roll_many(17, 0)
+        self.assertEqual(self.g.score(), 16)
+
 if __name__ == '__main__':
     unittest.main()
