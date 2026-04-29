@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DailyGlow - Task Manager</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { padding: 20px; background-color: #ffffff; }
+        .table { margin-bottom: 40px; }
+        h2, h4 { color: #333; margin-bottom: 20px; }
+        .header-line { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 25px; }
+        /* Priority Colors */
+        .priority-High { color: #dc3545; font-weight: bold; }
+        .priority-Medium { color: #fd7e14; }
+        .priority-Low { color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-line">
+            <h2>DailyGlow: Task Management System</h2>
+        </div>
+        
+        <div class="mb-4">
+            <h5>Create New Task:</h5>
+            <form action="/add" method="post" class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="title" class="form-control" placeholder="Task Title" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="description" class="form-control" placeholder="Description (optional)">
+                </div>
+                <div class="col-md-3">
+                    <select name="priority" class="form-select">
+                        <option value="Low">Low Priority</option>
+                        <option value="Medium" selected>Medium Priority</option>
+                        <option value="High">High Priority</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">Add Task</button>
+                </div>
+            </form>
+        </div>
+
+        <h4>Active Tasks</h4>
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Title & Description</th>
+                    <th>Priority</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.id }}</td>
+                    <td>
+                        <strong>{{ task.title }}</strong><br>
+                        <small class="text-muted">{{ task.description or "No description provided" }}</small>
+                    </td>
+                    <td class="priority-{{ task.priority }}">{{ task.priority }}</td>
+                    <td>
+                        <form action="/complete/{{ task.id }}" method="post">
+                            <button type="submit" class="btn btn-sm btn-success w-100">Complete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center text-muted">No active tasks found</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h4>Archive (Completed Tasks)</h4>
+        <table class="table table-sm table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th>Title</th>
+                    <th>Priority</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in archived_tasks %}
+                <tr>
+                    <td>{{ task.id }}</td>
+                    <td class="text-muted text-decoration-line-through">{{ task.title }}</td>
+                    <td class="text-muted">{{ task.priority }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3" class="text-center text-muted">Archive is empty</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
